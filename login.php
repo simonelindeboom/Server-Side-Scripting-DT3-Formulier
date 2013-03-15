@@ -7,19 +7,26 @@ $passwordForm = $_POST['wachtwoord'];
 
 if ($usernameForm && $passwordForm)
 {
-	$connect = mysql_connect('localhost', 'databasename', 'password') or die('Kan geen verbinding maken!');
-	mysql_select_db('tabelname', $connect) or die ('Kan database niet vinden!');
+	$mysqli = new mysqli('localhost', 'Databasename', 'Tabelname', 'Password');
 
-	#loop per regel, array, als niet or die
-	$query = 'SELECT * FROM gebruikers'; 
-	$result = mysql_query($query, $connect);
+	if (mysqli_connect_errno()){
+		printf('Kan geen verbinding maken!', mysqli_connect_error());
+		exit();
+	}
+
+	// Dit zijn de variabelen die je verkrijgt van het formulier
+	$usernameForm = $mysqli->real_escape_string($usernameForm);
+	$passwordForm = $mysqli->real_escape_string($passwordForm);
+
+	#query uit database
+	$result = $mysqli->query('SELECT * FROM gebruikers');
 
 	#hier is iets mis maar ik weet het nu ook niet meer ):
-	while($dataArray = mysql_fetch_array($result))
+	while($dataArray = $result->fetch_array())
 	{
 		// Dit zijn de variabelen uit de database
-		$usernameDB = $dataArray['gebruikersnaam'];
-		$passwordDB = $dataArray['wachtwoord'];
+		$usernameDB = $mysqli->real_escape_string($dataArray['gebruikersnaam']);
+		$passwordDB = $mysqli->real_escape_string($dataArray['wachtwoord']);
 
 		//vergelijk usernameform met usernamedb, match check passwordform met paswordDB
 		if($usernameForm == $usernameDB && md5($passwordForm) == $passwordDB)
@@ -30,7 +37,8 @@ if ($usernameForm && $passwordForm)
 		}
 		else
 		{
-			echo 'niet ingelogd';
+		echo 'Er is iets misgegaan, voer opnnieuw je gebruikersnaam en wachtwoord in!
+		<a href="loguit.php">Opnieuw inloggen</a>';
 		}	
 	}
 }
