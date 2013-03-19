@@ -7,7 +7,7 @@ $passwordForm = $_POST['wachtwoord'];
 
 if ($usernameForm && $passwordForm)
 {
-	$mysqli = new mysqli('localhost', 'Databasename', 'Tabelname', 'Password');
+	$mysqli = new mysqli('localhost', 'gebruikersnaam', 'wachtoord', 'database');
 
 	if (mysqli_connect_errno()){
 		printf('Kan geen verbinding maken!', mysqli_connect_error());
@@ -21,7 +21,7 @@ if ($usernameForm && $passwordForm)
 	#query uit database
 	$result = $mysqli->query('SELECT * FROM gebruikers');
 
-	#hier is iets mis maar ik weet het nu ook niet meer ):
+	#haal uit array
 	while($dataArray = $result->fetch_array())
 	{
 		// Dit zijn de variabelen uit de database
